@@ -1,0 +1,23 @@
+{
+  "name": "@workspace/auth",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^25.1.0",
+    "typescript": "^6.0.3",
+    "@workspace/database": "workspace:*",
+    "@workspace/config": "workspace:*"
+  },
+  "dependencies": {
+    "better-auth": "^1.6.11"
+  },
+  "exports": {
+    "./client": "./client.ts",
+    "./server": "./server.ts"
+  }
+}

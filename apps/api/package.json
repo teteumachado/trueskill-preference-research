@@ -9,15 +9,18 @@
     "start": "NODE_ENV=production node dist/index.js"
   },
   "devDependencies": {
-    "dotenv-cli": "^8.0.0",
+    "@elysia/cors": "^1.4.2",
+    "@elysia/openapi": "^1.4.15",
     "@types/node": "^25.1.0",
+    "dotenv-cli": "^8.0.0",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@workspace/config": "workspace:*",
     "@elysia/node": "^1.4.6",
     "@sinclair/typebox": "^0.34.49",
+    "@workspace/config": "workspace:*",
+    "@workspace/auth": "workspace:*",
     "elysia": "^1.4.28",
     "openapi-types": "^12.1.3"
   }

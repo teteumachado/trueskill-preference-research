@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 export const env = createEnv({
   server: {
+    API_URL: z.string().min(1).url(),
     DATABASE_FILE_NAME: z.string().min(1),
   },
 
@@ -12,7 +13,9 @@ export const env = createEnv({
    */
   clientPrefix: 'PUBLIC_',
 
-  client: {},
+  client: {
+    PUBLIC_APP_URL: z.string().min(1).url(),
+  },
 
   /**
    * What object holds the environment variables at runtime. This is usually
