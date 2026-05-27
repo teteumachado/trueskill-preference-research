@@ -4,16 +4,18 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "tsx watch source/index.ts",
+    "dev": "dotenv -e ../../.env -- tsx watch source/index.ts",
     "build": "tsc source/index.ts --outDir dist",
     "start": "NODE_ENV=production node dist/index.js"
   },
   "devDependencies": {
+    "dotenv-cli": "^8.0.0",
     "@types/node": "^25.1.0",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@workspace/config": "workspace:*",
     "@elysia/node": "^1.4.6",
     "@sinclair/typebox": "^0.34.49",
     "elysia": "^1.4.28",
