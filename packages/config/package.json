@@ -13,6 +13,6 @@
     "zod": "^3.25.76"
   },
   "exports": {
-    "./env": "./index.ts"
+    ".": "./index.ts"
   }
 }
