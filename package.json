@@ -10,8 +10,10 @@
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
+    "@workspace/config": "workspace:*",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
+    "drizzle-kit": "^0.31.10",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "turbo": "^2.8.17",

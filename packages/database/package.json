@@ -1,0 +1,22 @@
+{
+  "name": "@workspace/database",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.3",
+    "@workspace/config": "workspace:*",
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.1.0",
+    "drizzle-kit": "^0.31.10"
+  }
+}
