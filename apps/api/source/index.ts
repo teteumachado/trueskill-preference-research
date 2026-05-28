@@ -1,6 +1,5 @@
 import { Elysia } from 'elysia'
 import { node } from '@elysia/node'
-import { env } from '@workspace/config'
 import { cors } from '@elysia/cors'
 import { openapi } from '@elysia/openapi'
 import { betterAuthImplement, OpenAPI } from '@/lib/auth'
@@ -8,7 +7,7 @@ import { betterAuthImplement, OpenAPI } from '@/lib/auth'
 const app = new Elysia({ adapter: node() })
   .use(
     cors({
-      origin: process.env.NODE_ENV === 'production' ? env.PUBLIC_APP_URL! : true,
+      origin: process.env.NODE_ENV === 'production' ? process.env.PUBLIC_APP_URL! : true,
     })
   )
   .use(
