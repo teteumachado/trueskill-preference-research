@@ -33,7 +33,7 @@ export const LoginForm = () => {
         {
           email: value.email,
           password: value.password,
-          callbackURL: '/',
+          callbackURL: '/dashboard',
           rememberMe: false,
         },
         {
