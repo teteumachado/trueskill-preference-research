@@ -8,6 +8,7 @@ const app = new Elysia({ adapter: node() })
   .use(
     cors({
       origin: process.env.NODE_ENV === 'production' ? process.env.PUBLIC_APP_URL! : true,
+      credentials: true,
     })
   )
   .use(
