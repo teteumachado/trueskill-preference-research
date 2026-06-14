@@ -3,13 +3,15 @@
 import { authClient } from "@workspace/auth/client"
 import { useRouter } from "next/navigation"
 import { Button } from "@workspace/ui/components/button"
+import { DropdownMenuItem } from "@workspace/ui/components/dropdown-menu"
 import { LogOut } from 'lucide-react'
 
 interface LogoutButtonProps {
   callbackUrl?: string
+  asDropdownMenuItem?: boolean
 }
 
-export const LogoutButton = ({ callbackUrl }: LogoutButtonProps) => {
+export const LogoutButton = ({ callbackUrl, asDropdownMenuItem }: LogoutButtonProps) => {
   const router = useRouter()
 
   const signOutCallback = async () => {
@@ -20,6 +22,15 @@ export const LogoutButton = ({ callbackUrl }: LogoutButtonProps) => {
         },
       },
     })
+  }
+
+  if (asDropdownMenuItem) {
+    return (
+      <DropdownMenuItem onClick={signOutCallback}>
+        <LogOut />
+        Log out
+      </DropdownMenuItem>
+    )
   }
 
   return (
