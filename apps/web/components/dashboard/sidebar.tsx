@@ -1,10 +1,12 @@
 'use client'
 import * as React from 'react'
 
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@workspace/ui/components/sidebar'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@workspace/ui/components/sidebar'
 import { Globe, Home } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { SidebarUser } from './sidebar-user'
+import { authClient } from '@workspace/auth/client'
 
 const sidebarData = [
   {
@@ -16,6 +18,9 @@ const sidebarData = [
 
 export const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
   const pathname = usePathname()
+  const {
+    data: session
+  } = authClient.useSession()
 
   return (
     <Sidebar collapsible='offcanvas' {...props}>
@@ -38,7 +43,7 @@ export const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) =
               {sidebarData.map(x => (
                 <SidebarMenuItem key={x.title}>
                   <Link href={x.url}>
-                    <SidebarMenuButton tooltip={x.title} className={pathname === x.url && 'bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground'}>
+                    <SidebarMenuButton tooltip={x.title} className={pathname === x.url && 'bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground' || ''}>
                       {x.icon && x.icon}
                       <span>{x.title}</span>
                     </SidebarMenuButton>
@@ -49,6 +54,9 @@ export const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) =
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarUser user={session?.user} />
+      </SidebarFooter>
     </Sidebar>
   )
 }
