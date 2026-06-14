@@ -37,3 +37,6 @@ npm-debug.log*
 
 # Local db
 local.db
+
+# Drizzle migrations
+drizzle/
