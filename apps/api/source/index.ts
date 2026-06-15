@@ -4,6 +4,7 @@ import { cors } from '@elysia/cors'
 import { openapi } from '@elysia/openapi'
 import { betterAuthImplement, OpenAPI } from '@/lib/auth'
 import { projectsRoutes } from '@/modules/projects/projects.router'
+import * as z from 'zod'
 
 const app = new Elysia({ adapter: node() })
   .use(
@@ -18,6 +19,9 @@ const app = new Elysia({ adapter: node() })
         components: await OpenAPI.components,
         paths: await OpenAPI.getPaths(),
       },
+      mapJsonSchema: {
+        zod: z.toJSONSchema
+      }
     })
   )
   .use(betterAuthImplement)
