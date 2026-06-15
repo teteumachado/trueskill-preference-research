@@ -1,6 +1,10 @@
+import { UpdateUserForm } from "@/components/dashboard/settings/accounts-form"
+
 const AccountsSettingsPage = () => {
   return (
-    <h1>testando</h1>
+    <div className="max-w-md">
+      <UpdateUserForm />
+    </div>
   )
 }
 
