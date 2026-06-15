@@ -4,7 +4,7 @@ import { cors } from '@elysia/cors'
 import { openapi } from '@elysia/openapi'
 import { betterAuthImplement, OpenAPI } from '@/lib/auth'
 import { projectsRoutes } from '@/modules/projects/projects.router'
-import { zodToJsonSchema } from 'zod-to-json-schema'
+import * as z from 'zod'
 
 const app = new Elysia({ adapter: node() })
   .use(
@@ -28,7 +28,7 @@ const app = new Elysia({ adapter: node() })
         paths: await OpenAPI.getPaths(),
       },
       mapJsonSchema: {
-        zod: (schema: any) => zodToJsonSchema(schema, { target: 'openApi3' })
+        zod: (schema: any) => z.toJSONSchema(schema, { unrepresentable: 'any' })
       }
     })
   )
