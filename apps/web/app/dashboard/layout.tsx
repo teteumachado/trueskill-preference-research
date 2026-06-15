@@ -1,5 +1,6 @@
 import { SidebarInset, SidebarProvider } from "@workspace/ui/components/sidebar"
 import { AppSidebar } from "@/components/dashboard/sidebar"
+import { SiteHeader } from "@/components/dashboard/header"
 
 export default function DashboardLayout({
   children,
@@ -17,6 +18,7 @@ export default function DashboardLayout({
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
+        <SiteHeader />
         <div className="p-3">
           {children}
         </div>

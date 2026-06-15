@@ -6,7 +6,7 @@ import { User } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const sidebarData = [
+export const sidebarData = [
   {
     title: 'Account',
     url: '/dashboard/settings',

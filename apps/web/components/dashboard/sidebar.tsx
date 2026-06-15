@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation'
 import { SidebarUser } from './sidebar-user'
 import { authClient } from '@workspace/auth/client'
 
-const sidebarData = [
+export const sidebarData = [
   {
     title: 'Home',
     url: '/dashboard',
