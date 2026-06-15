@@ -1,6 +1,6 @@
 'use client'
 import { authClient } from "@workspace/auth/client"
-
+import Link from 'next/link'
 import {
   Avatar,
   AvatarFallback,
@@ -73,10 +73,12 @@ export const SidebarUser = ({ user }: { user: typeof authClient.$Infer.Session.u
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserCircle />
-                Account
-              </DropdownMenuItem>
+              <Link href="/dashboard/settings">
+                <DropdownMenuItem>
+                  <UserCircle />
+                  Account
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <LogoutButton asDropdownMenuItem />
