@@ -1,9 +1,10 @@
+import { createId } from '@paralleldrive/cuid2'
 import { relations, sql } from 'drizzle-orm'
 import { sqliteTable, text, integer, real, index } from 'drizzle-orm/sqlite-core'
 import { user } from './auth'
 
 export const project = sqliteTable('project', {
-  id: text('id').primaryKey(),
+  id: text('id').primaryKey().default(createId()),
   name: text('name').notNull(),
   description: text('description'),
   createdBy: text('created_by')
@@ -21,7 +22,7 @@ export const project = sqliteTable('project', {
 export const item = sqliteTable(
   'item',
   {
-    id: text('id').primaryKey(),
+    id: text('id').primaryKey().default(createId()),
     projectId: text('project_id')
       .notNull()
       .references(() => project.id, { onDelete: 'cascade' }),
@@ -44,7 +45,7 @@ export const item = sqliteTable(
 export const comparison = sqliteTable(
   'comparison',
   {
-    id: text('id').primaryKey(),
+    id: text('id').primaryKey().default(createId()),
     projectId: text('project_id')
       .notNull()
       .references(() => project.id, { onDelete: 'cascade' }),
