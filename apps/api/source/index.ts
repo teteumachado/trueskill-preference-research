@@ -4,7 +4,7 @@ import { cors } from '@elysia/cors'
 import { openapi } from '@elysia/openapi'
 import { betterAuthImplement, OpenAPI } from '@/lib/auth'
 import { projectsRoutes } from '@/modules/projects/projects.router'
-import * as z from 'zod'
+import { zodToJsonSchema } from 'zod-to-json-schema'
 
 const app = new Elysia({ adapter: node() })
   .use(
@@ -16,11 +16,19 @@ const app = new Elysia({ adapter: node() })
   .use(
     openapi({
       documentation: {
+        info: {
+          title: 'TrueSkill Preference Research API',
+          version: '1.0.0',
+        },
+        tags: [
+          { name: 'Authentication', description: 'Sign in, sign up, and session management.' },
+          { name: 'Projects', description: 'Create and manage comparison projects.' },
+        ],
         components: await OpenAPI.components,
         paths: await OpenAPI.getPaths(),
       },
       mapJsonSchema: {
-        zod: z.toJSONSchema
+        zod: (schema: any) => zodToJsonSchema(schema, { target: 'openApi3' })
       }
     })
   )

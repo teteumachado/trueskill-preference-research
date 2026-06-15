@@ -2,9 +2,6 @@ import { createId } from '@paralleldrive/cuid2'
 import { relations, sql } from 'drizzle-orm'
 import { sqliteTable, text, integer, real, index } from 'drizzle-orm/sqlite-core'
 import { user } from './auth'
-import { createInsertSchema } from 'drizzle-zod'
-import { z } from 'zod'
-
 export const project = sqliteTable('project', {
   id: text('id').primaryKey().$defaultFn(createId),
   name: text('name').notNull(),
@@ -110,5 +107,3 @@ export const comparisonRelations = relations(comparison, ({ one }) => ({
     references: [user.id],
   }),
 }))
-
-export const projectInsertSchema = createInsertSchema(project)

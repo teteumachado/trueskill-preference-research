@@ -1,7 +1,11 @@
 import { Database } from '@workspace/database'
-import { project, item, comparison, projectInsertSchema } from '@workspace/database/schema'
+import { project, item, comparison } from '@workspace/database/schema'
 import { eq, and, sql } from 'drizzle-orm'
-import { z } from 'zod'
+
+type CreateProjectBody = {
+  name: string
+  description?: string
+}
 
 export async function getProjects(userId: string) {
   return Database
@@ -23,7 +27,7 @@ export async function getProjects(userId: string) {
     .orderBy(project.createdAt)
 }
 
-export async function createProject(userId: string, body: Omit<z.infer<typeof projectInsertSchema>, 'createdBy'>) {
+export async function createProject(userId: string, body: CreateProjectBody) {
   return Database.insert(project).values({
     name: body.name,
     description: body.description,
