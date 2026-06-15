@@ -1,7 +1,7 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { Database } from '@workspace/database'
-import { openAPI } from 'better-auth/plugins'
+import { openAPI, bearer } from 'better-auth/plugins'
 import * as schema from '@workspace/database/schema'
 
 export const auth = betterAuth({
@@ -15,5 +15,5 @@ export const auth = betterAuth({
   baseURL: process.env.API_URL!,
   basePath: '/auth',
   trustedOrigins: [process.env.PUBLIC_APP_URL!],
-  plugins: [openAPI()],
+  plugins: [openAPI(), bearer()],
 })
