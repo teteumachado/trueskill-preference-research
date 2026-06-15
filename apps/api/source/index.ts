@@ -3,6 +3,7 @@ import { node } from '@elysia/node'
 import { cors } from '@elysia/cors'
 import { openapi } from '@elysia/openapi'
 import { betterAuthImplement, OpenAPI } from '@/lib/auth'
+import { projectsRoutes } from '@/modules/projects/projects.router'
 
 const app = new Elysia({ adapter: node() })
   .use(
@@ -20,5 +21,6 @@ const app = new Elysia({ adapter: node() })
     })
   )
   .use(betterAuthImplement)
+  .use(projectsRoutes)
   .get('/', () => 'Hi')
   .listen(8000)

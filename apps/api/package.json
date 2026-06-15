@@ -18,9 +18,13 @@
   },
   "dependencies": {
     "@elysia/node": "^1.4.6",
+    "@libsql/client": "^0.17.3",
     "@sinclair/typebox": "^0.34.49",
     "@workspace/auth": "workspace:*",
+    "@workspace/database": "workspace:*",
+    "drizzle-orm": "^0.45.2",
     "elysia": "^1.4.28",
+    "zod": "^3.25.76",
     "openapi-types": "^12.1.3"
   }
 }
