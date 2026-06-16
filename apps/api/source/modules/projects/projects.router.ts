@@ -27,9 +27,8 @@ const createdProjectSchema = z.object({
   updatedAt: z.date(),
 })
 
-export const projectsRoutes = (
-  new Elysia({ name: 'projects', prefix: '/projects' }) as unknown as typeof betterAuthImplement
-)
+export const projectsRoutes = new Elysia({ name: 'projects', prefix: '/projects' })
+  .use(betterAuthImplement)
   .get('/', async ({ user }) => getProjects(user.id), {
     auth: true,
     response: projectListItemSchema.array(),
