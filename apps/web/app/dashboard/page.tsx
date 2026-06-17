@@ -10,16 +10,16 @@ const DashboardPage = () => {
   } = authClient.useSession()
 
   return (
-    <>
-      {isPending && (
+    <div>
+      {isPending ? (
         <h1>Carregando</h1>
-      ) || (
-          <div>
-            <h1>{session?.user.name || 'Não logado'}</h1>
-            <LogoutButton />
-          </div>
-        )}
-    </>
+      ) : (
+        <>
+          <h1>{session?.user.name || 'Não logado'}</h1>
+          <LogoutButton />
+        </>
+      )}
+    </div>
   )
 }
 
