@@ -5,6 +5,7 @@ import { cn } from '@workspace/ui/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@workspace/ui/components/sonner'
 import { TooltipProvider } from '@workspace/ui/components/tooltip'
+import { QueryProvider } from '@/components/query-provider'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -27,7 +28,9 @@ export default function RootLayout({
       <body>
         <TooltipProvider>
           <ThemeProvider>
-            {children}
+            <QueryProvider>
+              {children}
+            </QueryProvider>
             <Toaster />
           </ThemeProvider>
         </TooltipProvider>
