@@ -1,11 +1,17 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
 
-class ApiError extends Error {
+export class ApiError extends Error {
   status: number
   body: unknown
 
   constructor(status: number, body: unknown) {
-    super(`API error: ${status}`)
+    const message =
+      (body && typeof body === 'object' && 'detail' in (body as Record<string, unknown>)
+        ? String((body as Record<string, unknown>).detail)
+        : undefined) ??
+      `API error: ${status}`
+
+    super(message)
     this.status = status
     this.body = body
   }
@@ -41,6 +47,16 @@ export const api = {
 }
 
 export type ProjectListItem = {
+  id: string
+  name: string
+  description: string | null
+  createdAt: string
+  updatedAt: string
+  itemCount: number
+  comparisonCount: number
+}
+
+export type Project = {
   id: string
   name: string
   description: string | null

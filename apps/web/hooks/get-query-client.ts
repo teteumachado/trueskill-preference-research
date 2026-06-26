@@ -1,10 +1,15 @@
 import {
+  QueryCache,
   QueryClient,
   defaultShouldDehydrateQuery,
 } from '@tanstack/react-query'
+import { ErrorToast } from '@/lib/toast'
 
 function makeQueryClient() {
   return new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error) => ErrorToast(error.message),
+    }),
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
