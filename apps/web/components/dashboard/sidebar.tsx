@@ -2,7 +2,7 @@
 import * as React from 'react'
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@workspace/ui/components/sidebar'
-import { Globe, Home } from 'lucide-react'
+import { Folder, Globe, Home } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SidebarUser } from './sidebar-user'
@@ -13,6 +13,11 @@ export const sidebarData = [
     title: 'Home',
     url: '/dashboard',
     icon: <Home />
+  },
+  {
+    title: 'Projects',
+    url: '/dashboard/projects',
+    icon: <Folder />
   }
 ]
 
