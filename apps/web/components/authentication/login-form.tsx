@@ -19,7 +19,7 @@ const formSchema = z.object({
     .max(32, 'Description must be at most 32 characters.'),
 })
 
-export const LoginForm = () => {
+export const LoginForm = ({ redirectTo }: { redirectTo?: string }) => {
   const form = useForm({
     defaultValues: {
       email: '',
@@ -33,7 +33,7 @@ export const LoginForm = () => {
         {
           email: value.email,
           password: value.password,
-          callbackURL: '/dashboard',
+          callbackURL: redirectTo || '/dashboard',
           rememberMe: false,
         },
         {
