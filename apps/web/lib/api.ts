@@ -65,3 +65,15 @@ export type Project = {
   itemCount: number
   comparisonCount: number
 }
+
+export type Item = {
+  id: string
+  projectId: string
+  name: string
+  description: string | null
+  imageUrl: string | null
+  mu: number
+  sigma: number
+  createdAt: string
+  updatedAt: string
+}

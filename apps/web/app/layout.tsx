@@ -7,6 +7,15 @@ import { Toaster } from '@workspace/ui/components/sonner'
 import { TooltipProvider } from '@workspace/ui/components/tooltip'
 import { Providers } from '@/components/providers'
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Trueskill Preference Research',
+    template: '%s | Trueskill Preference Research',
+  },
+}
+
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
 
 const fontMono = Geist_Mono({

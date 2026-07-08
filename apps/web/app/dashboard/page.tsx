@@ -1,36 +1,12 @@
-'use client'
+import type { Metadata } from 'next'
+import { DashboardContent } from './dashboard-content'
 
-import { useEffect, useState } from 'react'
-
-import { LogoutButton } from "@/components/authentication/logout-button"
-import { authClient } from "@workspace/auth/client"
+export const metadata: Metadata = {
+  title: 'Dashboard',
+}
 
 const DashboardPage = () => {
-  const [hydrated, setHydrated] = useState(false)
-
-  useEffect(() => {
-    setHydrated(true)
-  }, [])
-
-  const {
-    data: session,
-    isPending,
-  } = authClient.useSession()
-
-  if (!hydrated || isPending) {
-    return (
-      <div>
-        <h1>Carregando</h1>
-      </div>
-    )
-  }
-
-  return (
-    <div>
-      <h1>{session?.user.name || 'Não logado'}</h1>
-      <LogoutButton />
-    </div>
-  )
+  return <DashboardContent />
 }
 
 export default DashboardPage

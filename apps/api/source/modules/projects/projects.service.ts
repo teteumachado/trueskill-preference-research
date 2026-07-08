@@ -7,6 +7,11 @@ type CreateProjectBody = {
   description?: string
 }
 
+type CreateItemBody = {
+  name: string
+  description?: string
+}
+
 export async function getProjects(userId: string) {
   return Database
     .select({
@@ -55,4 +60,55 @@ export async function getProjectById(id: string, userId: string) {
     .limit(1)
 
   return result ?? null
+}
+
+export async function getItems(projectId: string, userId: string) {
+  const [owner] = await Database
+    .select({ id: project.id })
+    .from(project)
+    .where(and(eq(project.id, projectId), eq(project.createdBy, userId)))
+    .limit(1)
+
+  if (!owner) throw new Error('NOT_FOUND')
+
+  return Database
+    .select()
+    .from(item)
+    .where(eq(item.projectId, projectId))
+    .orderBy(item.createdAt)
+}
+
+export async function createItem(projectId: string, userId: string, body: CreateItemBody) {
+  const [owner] = await Database
+    .select({ id: project.id })
+    .from(project)
+    .where(and(eq(project.id, projectId), eq(project.createdBy, userId)))
+    .limit(1)
+
+  if (!owner) throw new Error('NOT_FOUND')
+
+  const [result] = await Database.insert(item).values({
+    projectId,
+    name: body.name,
+    description: body.description ?? null,
+  }).returning()
+
+  return result
+}
+
+export async function deleteItem(projectId: string, itemId: string, userId: string) {
+  const [owner] = await Database
+    .select({ id: project.id })
+    .from(project)
+    .where(and(eq(project.id, projectId), eq(project.createdBy, userId)))
+    .limit(1)
+
+  if (!owner) throw new Error('NOT_FOUND')
+
+  const [result] = await Database
+    .delete(item)
+    .where(and(eq(item.id, itemId), eq(item.projectId, projectId)))
+    .returning({ id: item.id })
+
+  if (!result) throw new Error('NOT_FOUND')
 }

@@ -1,5 +1,11 @@
 import { Button } from '@workspace/ui/components/button'
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Home',
+}
+
 export default function Page() {
   return (
     <div className="flex min-h-svh p-6">

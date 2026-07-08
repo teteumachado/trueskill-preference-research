@@ -1,6 +1,13 @@
 import { Elysia } from 'elysia'
 import { z } from 'zod'
-import { getProjects, getProjectById, createProject } from './projects.service'
+import {
+  getProjects,
+  getProjectById,
+  createProject,
+  getItems,
+  createItem,
+  deleteItem,
+} from './projects.service'
 import { betterAuthImplement } from '@/lib/auth'
 
 const createProjectBodySchema = z.object({
@@ -23,6 +30,23 @@ const createdProjectSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   createdBy: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+const createItemBodySchema = z.object({
+  name: z.string().min(1, 'Name is required.'),
+  description: z.string().optional(),
+})
+
+const itemSchema = z.object({
+  id: z.string(),
+  projectId: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  mu: z.number(),
+  sigma: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })
@@ -64,5 +88,46 @@ export const projectsRoutes = new Elysia({ name: 'projects', prefix: '/projects'
       tags: ['Projects'],
       summary: 'Get project by ID',
       description: 'Returns a single project by ID if it belongs to the authenticated user.',
+    },
+  })
+  .get('/:id/items', async ({ user, params }) => {
+    return getItems(params.id, user.id)
+  }, {
+    auth: true,
+    params: z.object({ id: z.string() }),
+    response: itemSchema.array(),
+    detail: {
+      tags: ['Items'],
+      summary: 'List items',
+      description: 'Returns all items for a project.',
+    },
+  })
+  .post('/:id/items', async ({ user, params, body, set }) => {
+    const result = await createItem(params.id, user.id, body)
+    set.status = 201
+    return result
+  }, {
+    auth: true,
+    params: z.object({ id: z.string() }),
+    body: createItemBodySchema,
+    response: {
+      201: itemSchema,
+    },
+    detail: {
+      tags: ['Items'],
+      summary: 'Create item',
+      description: 'Creates a new item in a project.',
+    },
+  })
+  .delete('/:id/items/:itemId', async ({ user, params, set }) => {
+    await deleteItem(params.id, params.itemId, user.id)
+    set.status = 204
+  }, {
+    auth: true,
+    params: z.object({ id: z.string(), itemId: z.string() }),
+    detail: {
+      tags: ['Items'],
+      summary: 'Delete item',
+      description: 'Deletes an item from a project.',
     },
   })

@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 import { ProjectDetail } from '@/components/dashboard/projects/project-detail'
 import { SetTitle } from '@/components/dashboard/set-title'
 import { ApiError, type Project } from '@/lib/api'
+import type { Metadata } from 'next'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
 
@@ -28,6 +29,17 @@ async function fetchProject(id: string): Promise<Project> {
   if (!project) throw new ApiError(404, null)
 
   return project
+}
+
+export const generateMetadata = async ({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> => {
+  const { id } = await params
+
+  try {
+    const project = await fetchProject(id)
+    return { title: project.name }
+  } catch {
+    return { title: 'Projeto' }
+  }
 }
 
 const ProjectPage = async ({ params }: { params: Promise<{ id: string }> }) => {

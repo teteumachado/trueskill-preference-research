@@ -2,6 +2,12 @@ import { Separator } from '@workspace/ui/components/separator'
 import Link from 'next/link'
 import { RegisterForm } from '@/components/authentication/register-form'
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Register',
+}
+
 export const RegisterPage = () => {
   return (
     <div className="relative isolate flex flex-col items-center">
