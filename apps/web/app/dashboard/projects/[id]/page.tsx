@@ -33,13 +33,7 @@ const ProjectPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params
 
   try {
-    const project = await fetchProject(id)
-
-    return (
-      <div>
-        <ProjectDetail project={project} />
-      </div>
-    )
+    var project = await fetchProject(id) // eslint-disable-line no-var
   } catch (error) {
     const status = error instanceof ApiError ? error.status : null
     const message = error instanceof ApiError ? error.message : 'Erro ao carregar projeto.'
@@ -77,6 +71,12 @@ const ProjectPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
     )
   }
+
+  return (
+    <div>
+      <ProjectDetail project={project} />
+    </div>
+  )
 }
 
 export default ProjectPage
