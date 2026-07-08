@@ -1,0 +1,20 @@
+{
+  "name": "@workspace/trueskill",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./source/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^25.1.0",
+    "typescript": "^6.0.3",
+    "vitest": "^3.1.7"
+  }
+}
