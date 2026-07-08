@@ -2,6 +2,7 @@ import { SidebarInset, SidebarProvider } from "@workspace/ui/components/sidebar"
 import { AppSidebar } from "@/components/dashboard/sidebar"
 import { SiteHeader } from "@/components/dashboard/header"
 import { AuthGuard } from "@/components/dashboard/auth-guard"
+import { TitleProvider } from "@/components/dashboard/title-provider"
 
 export default function DashboardLayout({
   children,
@@ -10,6 +11,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <AuthGuard>
+      <TitleProvider>
       <SidebarProvider
         style={
           {
@@ -26,6 +28,7 @@ export default function DashboardLayout({
           </div>
         </SidebarInset>
       </SidebarProvider>
+      </TitleProvider>
     </AuthGuard>
   )
 }

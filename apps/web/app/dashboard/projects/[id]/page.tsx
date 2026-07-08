@@ -2,6 +2,7 @@ import { AlertTriangle, Lock, SearchX } from 'lucide-react'
 import { headers } from 'next/headers'
 
 import { ProjectDetail } from '@/components/dashboard/projects/project-detail'
+import { SetTitle } from '@/components/dashboard/set-title'
 import { ApiError, type Project } from '@/lib/api'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
@@ -74,6 +75,7 @@ const ProjectPage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div>
+      <SetTitle title={`Projeto - ${project.name}`} />
       <ProjectDetail project={project} />
     </div>
   )
