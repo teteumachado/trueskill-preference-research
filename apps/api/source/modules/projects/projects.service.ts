@@ -1,7 +1,7 @@
 import { Database } from '@workspace/database'
 import { project, item, comparison } from '@workspace/database/schema'
 import { eq, and, sql, inArray } from 'drizzle-orm'
-import { update as trueskillUpdate, nextPair } from '@workspace/trueskill'
+import { update as trueskillUpdate } from '@workspace/trueskill'
 
 type CreateProjectBody = {
   name: string
@@ -154,13 +154,13 @@ export async function createComparison(
   itemBId: string,
   winnerId: string,
 ) {
-  const [owner] = await Database
+  const [existingProject] = await Database
     .select({ id: project.id })
     .from(project)
-    .where(and(eq(project.id, projectId), eq(project.createdBy, userId)))
+    .where(eq(project.id, projectId))
     .limit(1)
 
-  if (!owner) throw new Error('NOT_FOUND')
+  if (!existingProject) throw new Error('NOT_FOUND')
 
   const [winnerItem, loserItem] = await Promise.all([
     Database.select().from(item).where(eq(item.id, winnerId)).limit(1).then(rows => rows[0]),
@@ -179,6 +179,7 @@ export async function createComparison(
       eq(comparison.projectId, projectId),
       eq(comparison.itemAId, pairIds[0]!),
       eq(comparison.itemBId, pairIds[1]!),
+      eq(comparison.voterId, userId),
     ))
     .limit(1)
 
@@ -216,13 +217,13 @@ export async function createComparison(
 }
 
 export async function getNextPair(projectId: string, userId: string) {
-  const [owner] = await Database
+  const [existing] = await Database
     .select({ id: project.id })
     .from(project)
-    .where(and(eq(project.id, projectId), eq(project.createdBy, userId)))
+    .where(eq(project.id, projectId))
     .limit(1)
 
-  if (!owner) throw new Error('NOT_FOUND')
+  if (!existing) throw new Error('NOT_FOUND')
 
   const items = await Database
     .select()
@@ -231,19 +232,38 @@ export async function getNextPair(projectId: string, userId: string) {
 
   if (items.length < 2) return null
 
-  const uniquePairs = await Database
+  const userPairs = await Database
     .select({ itemAId: comparison.itemAId, itemBId: comparison.itemBId })
     .from(comparison)
-    .where(eq(comparison.projectId, projectId))
+    .where(and(eq(comparison.projectId, projectId), eq(comparison.voterId, userId)))
 
-  const uniquePairCount = new Set(uniquePairs.map(p => [p.itemAId, p.itemBId].sort().join(':'))).size
   const totalPairs = (items.length * (items.length - 1)) / 2
+  const votedSet = new Set(userPairs.map(p => [p.itemAId, p.itemBId].sort().join(':')))
 
-  if (uniquePairCount >= totalPairs) return null
+  if (votedSet.size >= totalPairs) return null
 
-  const [a, b] = nextPair(items)
+  let bestPair: [typeof items[0], typeof items[0]] | null = null
+  let bestScore = -Infinity
 
-  return { itemA: a, itemB: b }
+  for (let i = 0; i < items.length; i++) {
+    for (let j = i + 1; j < items.length; j++) {
+      const a = items[i]!
+      const b = items[j]!
+      const key = [a.id, b.id].sort().join(':')
+      if (votedSet.has(key)) continue
+
+      const score = a.sigma + b.sigma - Math.abs(a.mu - b.mu)
+
+      if (score > bestScore) {
+        bestScore = score
+        bestPair = [a, b]
+      }
+    }
+  }
+
+  if (!bestPair) return null
+
+  return { itemA: bestPair[0], itemB: bestPair[1] }
 }
 
 export async function getProjectStats(

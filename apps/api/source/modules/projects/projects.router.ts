@@ -87,12 +87,16 @@ export const projectsRoutes = new Elysia({ name: 'projects', prefix: '/projects'
       description: 'Creates a new project for the authenticated user.',
     },
   })
-  .get('/:id', async ({ user, params }) => {
-    return getProjectById(params.id, user.id)
+  .get('/:id', async ({ user, params, set }) => {
+    const result = await getProjectById(params.id, user.id)
+    if (!result) {
+      set.status = 404
+      return { error: 'Not found' }
+    }
+    return result
   }, {
     auth: true,
     params: z.object({ id: z.string() }),
-    response: projectListItemSchema.nullable(),
     detail: {
       tags: ['Projects'],
       summary: 'Get project by ID',
