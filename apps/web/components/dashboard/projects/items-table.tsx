@@ -1,10 +1,9 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { AlertTriangle, Loader2, Search, Trash2 } from 'lucide-react'
+import { useMemo } from 'react'
+import { AlertTriangle, Loader2, Trash2 } from 'lucide-react'
 
 import { Button } from '@workspace/ui/components/button'
-import { Input } from '@workspace/ui/components/input'
 import {
   Table,
   TableBody,
@@ -17,6 +16,7 @@ import {
 import { useItems, useDeleteItem } from '@/hooks/use-items'
 import { ApiError } from '@/lib/api'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { EditItemDialog } from './edit-item-dialog'
 
 export const ItemsTable = ({ projectId, query }: { projectId: string; query: string }) => {
   const { data: items, isLoading, isError, error } = useItems(projectId)
@@ -77,9 +77,7 @@ export const ItemsTable = ({ projectId, query }: { projectId: string; query: str
             <TableRow>
               <TableHead className="w-1/3">Name</TableHead>
               <TableHead className="hidden sm:table-cell">Description</TableHead>
-              <TableHead className="w-20 text-right">μ</TableHead>
-              <TableHead className="w-20 text-right">σ</TableHead>
-              <TableHead className="w-12">
+              <TableHead className="w-24">
                 <span className="sr-only">Actions</span>
               </TableHead>
             </TableRow>
@@ -94,28 +92,25 @@ export const ItemsTable = ({ projectId, query }: { projectId: string; query: str
                   <TableCell className="hidden sm:table-cell max-w-0 truncate text-muted-foreground">
                     {item.description ?? '—'}
                   </TableCell>
-                  <TableCell className="text-right tabular-nums">
-                    {item.mu.toFixed(1)}
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums text-muted-foreground">
-                    {item.sigma.toFixed(1)}
-                  </TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => deleteItem.mutate(item.id)}
-                      disabled={deleteItem.isPending}
-                    >
-                      <Trash2 className="size-4 text-destructive" />
-                    </Button>
+                    <div className="flex items-center justify-end gap-1">
+                      <EditItemDialog projectId={projectId} item={item} />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteItem.mutate(item.id)}
+                        disabled={deleteItem.isPending}
+                      >
+                        <Trash2 className="size-4 text-destructive" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={5}
+                  colSpan={3}
                   className="h-24 text-center text-muted-foreground"
                 >
                   {query ? 'No items match your search.' : 'No items yet. Add one to get started.'}

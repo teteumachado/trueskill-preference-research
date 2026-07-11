@@ -22,6 +22,7 @@
     "@sinclair/typebox": "^0.34.49",
     "@workspace/auth": "workspace:*",
     "@workspace/database": "workspace:*",
+    "@workspace/trueskill": "workspace:*",
     "drizzle-orm": "^0.45.2",
     "elysia": "^1.4.28",
     "openapi-types": "^12.1.3",

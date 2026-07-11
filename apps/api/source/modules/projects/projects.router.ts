@@ -7,9 +7,13 @@ import {
   getItems,
   createItem,
   deleteItem,
+  updateItem,
+  createComparison,
+  getNextPair,
+  getProjectStats,
+  getRankedItems,
 } from './projects.service'
-import { betterAuthImplement } from '@/lib/auth'
-
+import { authPlugin } from '@/lib/auth'
 const createProjectBodySchema = z.object({
   name: z.string().min(1, 'Name is required.'),
   description: z.string().optional(),
@@ -39,6 +43,11 @@ const createItemBodySchema = z.object({
   description: z.string().optional(),
 })
 
+const updateItemBodySchema = z.object({
+  name: z.string().min(1).optional(),
+  description: z.string().nullable().optional(),
+})
+
 const itemSchema = z.object({
   id: z.string(),
   projectId: z.string(),
@@ -52,7 +61,7 @@ const itemSchema = z.object({
 })
 
 export const projectsRoutes = new Elysia({ name: 'projects', prefix: '/projects' })
-  .use(betterAuthImplement)
+  .use(authPlugin)
   .get('/', async ({ user }) => getProjects(user.id), {
     auth: true,
     response: projectListItemSchema.array(),
@@ -102,6 +111,17 @@ export const projectsRoutes = new Elysia({ name: 'projects', prefix: '/projects'
       description: 'Returns all items for a project.',
     },
   })
+  .get('/:id/items/ranking', async ({ user, params }) => {
+    return getRankedItems(params.id, user.id)
+  }, {
+    auth: true,
+    params: z.object({ id: z.string() }),
+    detail: {
+      tags: ['Items'],
+      summary: 'Get ranked items',
+      description: 'Returns items ranked by TrueSkill conservative rating.',
+    },
+  })
   .post('/:id/items', async ({ user, params, body, set }) => {
     const result = await createItem(params.id, user.id, body)
     set.status = 201
@@ -129,5 +149,66 @@ export const projectsRoutes = new Elysia({ name: 'projects', prefix: '/projects'
       tags: ['Items'],
       summary: 'Delete item',
       description: 'Deletes an item from a project.',
+    },
+  })
+  .put('/:id/items/:itemId', async ({ user, params, body }) => {
+    return updateItem(params.id, params.itemId, user.id, body)
+  }, {
+    auth: true,
+    params: z.object({ id: z.string(), itemId: z.string() }),
+    body: updateItemBodySchema,
+    response: itemSchema,
+    detail: {
+      tags: ['Items'],
+      summary: 'Update item',
+      description: 'Updates an item in a project.',
+    },
+  })
+  .get('/:id/next-pair', async ({ user, params, set }) => {
+    const result = await getNextPair(params.id, user.id)
+    if (result === null) {
+      set.status = 204
+      return
+    }
+    return result
+  }, {
+    auth: true,
+    params: z.object({ id: z.string() }),
+    detail: {
+      tags: ['Comparisons'],
+      summary: 'Get next pair',
+      description: 'Returns the most informative next pair to compare.',
+    },
+  })
+  .get('/:id/stats', async ({ user, params, query }) => {
+    return getProjectStats(params.id, user.id, query.period)
+  }, {
+    auth: true,
+    params: z.object({ id: z.string() }),
+    query: z.object({
+      period: z.enum(['24h', '7d', '30d', 'all']).default('7d'),
+    }),
+    detail: {
+      tags: ['Projects'],
+      summary: 'Get project stats',
+      description: 'Returns aggregated stats for a project.',
+    },
+  })
+  .post('/:id/comparisons', async ({ user, params, body, set }) => {
+    const result = await createComparison(params.id, user.id, body.itemAId, body.itemBId, body.winnerId)
+    set.status = 201
+    return result
+  }, {
+    auth: true,
+    params: z.object({ id: z.string() }),
+    body: z.object({
+      itemAId: z.string(),
+      itemBId: z.string(),
+      winnerId: z.string(),
+    }),
+    detail: {
+      tags: ['Comparisons'],
+      summary: 'Create comparison',
+      description: 'Registers a vote and updates TrueSkill ratings.',
     },
   })
