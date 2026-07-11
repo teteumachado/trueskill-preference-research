@@ -2,7 +2,7 @@ import { auth } from '@workspace/auth/server'
 import { Elysia } from 'elysia'
 import type { OpenAPIV3 } from 'openapi-types'
 
-export const betterAuthImplement = new Elysia({ name: 'better-auth' }).mount(auth.handler).macro({
+export const authPlugin = new Elysia({ name: 'auth-plugin' }).macro({
   auth: {
     async resolve({ status, request: { headers } }) {
       const session = await auth.api.getSession({
@@ -16,6 +16,8 @@ export const betterAuthImplement = new Elysia({ name: 'better-auth' }).mount(aut
     },
   },
 })
+
+export const betterAuthImplement = new Elysia({ name: 'better-auth' }).mount('/auth', auth.handler).use(authPlugin)
 
 type AuthSchema = Awaited<ReturnType<typeof auth.api.generateOpenAPISchema>>
 type AuthPath = AuthSchema['paths'][string]

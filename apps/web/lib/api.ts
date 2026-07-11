@@ -5,36 +5,63 @@ export class ApiError extends Error {
   body: unknown
 
   constructor(status: number, body: unknown) {
-    const message =
-      (body && typeof body === 'object' && 'detail' in (body as Record<string, unknown>)
-        ? String((body as Record<string, unknown>).detail)
-        : undefined) ??
-      `API error: ${status}`
-
-    super(message)
+    let message: string | undefined
+    if (body && typeof body === 'object') {
+      const obj = body as Record<string, unknown>
+      if ('detail' in obj) {
+        message = String(obj.detail)
+      } else if ('message' in obj) {
+        message = String(obj.message)
+      } else if ('error' in obj) {
+        message = String(obj.error)
+      }
+    }
+    if (typeof body === 'string') message = body
+    super(message ?? `API error: ${status}`)
     this.status = status
     this.body = body
   }
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...init?.headers,
-    },
-    ...init,
-  })
+  const url = `${BASE_URL}${path}`
+  console.debug('[API Request]', url, init?.method ?? 'GET')
+  let res: Response
+  try {
+    res = await fetch(url, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        ...init?.headers,
+      },
+      ...init,
+    })
+  } catch (error) {
+    console.error('[API Fetch Error]', url, error?.constructor?.name, error)
+    throw error
+  }
 
   if (!res.ok) {
-    const body = await res.json().catch(() => null)
+    const text = await res.text().catch(() => null)
+    let body: unknown = null
+    try {
+      body = text ? JSON.parse(text) : null
+    } catch {
+      body = text
+    }
+    console.error('[API Error]', res.status, url, body)
     throw new ApiError(res.status, body)
   }
 
-  if (res.status === 204) return undefined as T
+  if (res.status === 204) return null as T
 
-  return res.json()
+  const text = await res.text()
+  try {
+    return JSON.parse(text)
+  } catch (error) {
+    console.error('[API JSON Error]', url, error, 'status:', res.status, 'body:', text)
+    throw error
+  }
 }
 
 export const api = {

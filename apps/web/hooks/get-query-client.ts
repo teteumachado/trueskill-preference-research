@@ -4,11 +4,16 @@ import {
   defaultShouldDehydrateQuery,
 } from '@tanstack/react-query'
 import { ErrorToast } from '@/lib/toast'
+import { ApiError } from '@/lib/api'
 
 function makeQueryClient() {
   return new QueryClient({
     queryCache: new QueryCache({
-      onError: (error) => ErrorToast(error.message),
+      onError: (error) => {
+        console.error('[Query Error]', error?.constructor?.name, error, error instanceof ApiError ? { status: error.status, body: error.body, message: error.message } : undefined)
+        const apiErr = error as { status?: number; body?: unknown; message?: string }
+        ErrorToast(apiErr.status ? `[${apiErr.status}] ${apiErr.message}` : error.message)
+      },
     }),
     defaultOptions: {
       queries: {

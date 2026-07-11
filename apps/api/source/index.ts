@@ -32,6 +32,36 @@ const app = new Elysia({ adapter: node() })
       }
     })
   )
+  .onError(({ error, code, set, request }) => {
+    console.error('[Elysia Error]', code, error?.constructor?.name, error, request?.url)
+
+    if (code === 'NOT_FOUND') {
+      set.status = 404
+      return { error: 'Not found' }
+    }
+
+    if (code === 'VALIDATION') {
+      set.status = 422
+      const zodError = error as { issues?: Array<{ message: string; path: (string | number)[] }> }
+      return {
+        error: 'Validation failed',
+        details: zodError.issues ?? [],
+      }
+    }
+
+    if (error instanceof Error && error.message === 'NOT_FOUND') {
+      set.status = 404
+      return { error: 'Not found' }
+    }
+
+    if (error instanceof Error && error.message === 'ALREADY_VOTED') {
+      set.status = 409
+      return { error: 'You already voted on this pair' }
+    }
+
+    set.status = 500
+    return { error: 'Internal server error' }
+  })
   .use(betterAuthImplement)
   .use(projectsRoutes)
   .get('/', () => 'Hi')
