@@ -43,10 +43,10 @@ export const ItemsTable = ({ projectId, query }: { projectId: string; query: str
 
   if (isError) {
     const status = error instanceof ApiError ? error.status : null
-    const title = status === 403 ? 'Sem permissão' : 'Erro ao carregar itens'
+    const title = status === 403 ? 'Access denied' : 'Failed to load items'
     const message = status === 404
-      ? 'Nenhum item encontrado.'
-      : (error?.message ?? 'Ocorreu um erro inesperado.')
+      ? 'No items found.'
+      : (error?.message ?? 'An unexpected error occurred.')
 
     return (
       <div className="flex flex-col items-center justify-center gap-3 py-16">
@@ -61,13 +61,13 @@ export const ItemsTable = ({ projectId, query }: { projectId: string; query: str
     <ErrorBoundary fallback={(reset, error) => (
       <div className="flex flex-col items-center justify-center gap-3 py-16">
         <AlertTriangle className="size-8 text-destructive" />
-        <p className="text-destructive text-sm font-medium">Erro inesperado ao renderizar tabela.</p>
+        <p className="text-destructive text-sm font-medium">Unexpected error while rendering table.</p>
         {error && <p className="text-muted-foreground text-xs">{error.message}</p>}
         <button
           onClick={reset}
           className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium transition-colors"
         >
-          Tentar novamente
+          Try again
         </button>
       </div>
     )}>

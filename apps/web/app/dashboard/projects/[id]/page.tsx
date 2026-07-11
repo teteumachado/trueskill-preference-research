@@ -38,7 +38,7 @@ export const generateMetadata = async ({ params }: { params: Promise<{ id: strin
     const project = await fetchProject(id)
     return { title: project.name }
   } catch {
-    return { title: 'Projeto' }
+    return { title: 'Project' }
   }
 }
 
@@ -49,15 +49,15 @@ const ProjectPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     var project = await fetchProject(id) // eslint-disable-line no-var
   } catch (error) {
     const status = error instanceof ApiError ? error.status : null
-    const message = error instanceof ApiError ? error.message : 'Erro ao carregar projeto.'
+    const message = error instanceof ApiError ? error.message : 'Failed to load project.'
 
     if (status === 404) {
       return (
         <div className="flex flex-col items-center justify-center gap-3 py-16">
           <SearchX className="size-12 text-muted-foreground" />
-          <h2 className="text-lg font-semibold">Projeto não encontrado</h2>
+          <h2 className="text-lg font-semibold">Project not found</h2>
           <p className="text-muted-foreground text-sm">
-            O projeto que você está procurando não existe ou foi removido.
+            The project you are looking for does not exist or has been removed.
           </p>
         </div>
       )
@@ -67,9 +67,9 @@ const ProjectPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       return (
         <div className="flex flex-col items-center justify-center gap-3 py-16">
           <Lock className="size-12 text-muted-foreground" />
-          <h2 className="text-lg font-semibold">Sem permissão</h2>
+          <h2 className="text-lg font-semibold">Access denied</h2>
           <p className="text-muted-foreground text-sm">
-            Você não tem acesso a este projeto.
+            You do not have access to this project.
           </p>
         </div>
       )
@@ -87,7 +87,7 @@ const ProjectPage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div>
-      <SetTitle title={`Projeto - ${project.name}`} />
+      <SetTitle title={`Project - ${project.name}`} />
       <ProjectDetail project={project} />
     </div>
   )

@@ -47,15 +47,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return (
         <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 p-8">
           <div className="text-destructive text-4xl">!</div>
-          <h2 className="text-xl font-semibold">Algo deu errado</h2>
+          <h2 className="text-xl font-semibold">Something went wrong</h2>
           <p className="text-muted-foreground max-w-md text-center text-sm">
-            {this.state.error?.message ?? 'Ocorreu um erro inesperado.'}
+            {this.state.error?.message ?? 'An unexpected error occurred.'}
           </p>
           <button
             onClick={this.reset}
             className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium transition-colors"
           >
-            Tentar novamente
+            Try again
           </button>
         </div>
       )

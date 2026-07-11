@@ -42,10 +42,10 @@ export function ProjectsTable() {
 
   if (isError) {
     const status = error instanceof ApiError ? error.status : null
-    const title = status === 403 ? 'Sem permissão' : 'Erro ao carregar projetos'
+    const title = status === 403 ? 'Access denied' : 'Failed to load projects'
     const message = status === 404
-      ? 'Nenhum projeto encontrado.'
-      : (error?.message ?? 'Ocorreu um erro inesperado.')
+      ? 'No projects found.'
+      : (error?.message ?? 'An unexpected error occurred.')
 
     return (
       <div className="flex flex-col items-center justify-center gap-3 py-16">
@@ -61,7 +61,7 @@ export function ProjectsTable() {
       <div className="flex flex-col items-center justify-center gap-3 py-16">
         <AlertTriangle className="size-8 text-destructive" />
         <p className="text-destructive text-sm font-medium">
-          Erro inesperado ao renderizar tabela.
+          Unexpected error while rendering table.
         </p>
         {error && (
           <p className="text-muted-foreground text-xs">{error.message}</p>
@@ -70,7 +70,7 @@ export function ProjectsTable() {
           onClick={reset}
           className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium transition-colors"
         >
-          Tentar novamente
+          Try again
         </button>
       </div>
     )}>
@@ -82,11 +82,11 @@ export function ProjectsTable() {
           />
           <Input
             type="search"
-            placeholder="Buscar projeto..."
+            placeholder="Search projects..."
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             className="pl-9"
-            aria-label="Buscar projeto"
+            aria-label="Search projects"
           />
         </div>
 
@@ -94,11 +94,11 @@ export function ProjectsTable() {
           <Table className="table-fixed">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-1/3">Nome do projeto</TableHead>
-                <TableHead className="hidden sm:table-cell">Descrição</TableHead>
-                <TableHead className="hidden sm:table-cell w-24 text-right">Itens</TableHead>
+                <TableHead className="w-1/3">Project name</TableHead>
+                <TableHead className="hidden sm:table-cell">Description</TableHead>
+                <TableHead className="hidden sm:table-cell w-24 text-right">Items</TableHead>
                 <TableHead className="w-12">
-                  <span className="sr-only">Ações</span>
+                  <span className="sr-only">Actions</span>
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -137,7 +137,7 @@ export function ProjectsTable() {
                     colSpan={4}
                     className="h-24 text-center text-muted-foreground"
                   >
-                    Nenhum projeto encontrado.
+                    No projects found.
                   </TableCell>
                 </TableRow>
               )}
@@ -147,7 +147,7 @@ export function ProjectsTable() {
 
         <p className="text-sm text-muted-foreground">
           {filteredProjects.length}{" "}
-          {filteredProjects.length === 1 ? "projeto" : "projetos"}
+          {filteredProjects.length === 1 ? "project" : "projects"}
         </p>
       </div>
     </ErrorBoundary>
