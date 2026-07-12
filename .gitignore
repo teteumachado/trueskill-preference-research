@@ -21,6 +21,9 @@ coverage
 # VS Code
 .vscode
 
+# Zed
+.zed
+
 # Vercel
 .vercel
 
