@@ -1,12 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-.opencode
-.zed
-.vscode
-guide.md
-article.md
-local.db
-
 # Dependencies
 node_modules
 .pnp
@@ -24,6 +17,9 @@ coverage
 
 # Turbo
 .turbo
+
+# VS Code
+.vscode
 
 # Vercel
 .vercel
